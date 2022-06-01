@@ -6,22 +6,38 @@ public class Client {
     private PrintWriter out;
     private BufferedReader in;
 
-    public void startConnection(String ip, int port) throws IOException {
-        clientSocket = new Socket(ip, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    public void startConnection(String ip, int port) {
+        try {
+            clientSocket = new Socket(ip, port);
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Connection failed!");
+        }
     }
 
-    public String sendMessage(String msg) throws IOException {
+    public String sendMessage(String msg) {
         out.println(msg);
-        String resp = in.readLine();
+        String resp = null;
+        try {
+            resp = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Input incorrect!");
+        }
         return resp;
     }
 
-    public void stopConnection() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
+    public void stopConnection() {
+        try {
+            in.close();
+            out.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error while Shutdown!");
+        }
     }
 
 }
