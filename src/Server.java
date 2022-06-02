@@ -7,11 +7,14 @@ private ServerSocket serverSocket;
 private Socket clientSocket;
 private PrintWriter out;
 private BufferedReader in;
+private boolean running = true;
 
     public void start(int port) {
         try {
             serverSocket = new ServerSocket(port);
-            clientSocket = serverSocket.accept();
+            while (running) {
+                new Connection(serverSocket.accept(), this).start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Start failed!");
@@ -30,10 +33,7 @@ private BufferedReader in;
         }
     }
 
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.start(6666);
+    public void setRunning(boolean running) {
+        this.running = running;
     }
-
-
 }
